@@ -181,7 +181,7 @@ input::placeholder{
   border: 1px solid #00ff00;
   margin-bottom: 15px;
   background: #000;
-  display: none; /* ডিফল্টভাবে হাইড থাকবে */
+  display: none;
 }
 
 .song-item {
@@ -251,8 +251,8 @@ audio {
       <button class="btn-back" onclick="logout()">⬅ Back</button>
     </div>
 
-    <!-- Music Video Screen -->
-    <video id="video-screen" class="video-box" autoplay loop muted playsinline></video>
+    <!-- Music Video Screen (Loop সরানো হয়েছে) -->
+    <video id="video-screen" class="video-box" autoplay muted playsinline></video>
 
     <!-- Music Folder & Player Only -->
     <div class="section-title">🎵 Music Folder</div>
@@ -355,22 +355,31 @@ function logout(){
   document.getElementById("pass").value = "";
   document.getElementById("msg").innerHTML = "";
   
-  // Pause Audio & Video
-  const player = document.getElementById("audio-player");
-  player.pause();
-  
-  const videoScreen = document.getElementById("video-screen");
-  videoScreen.pause();
-  videoScreen.style.display = "none";
+  stopAudioAndVideo();
 }
 
-// Music Player Function (With Video & White Button Toggle)
+// অডিও এবং ভিডিও বন্ধ করার ফাংশন
+function stopAudioAndVideo() {
+  const player = document.getElementById("audio-player");
+  const videoScreen = document.getElementById("video-screen");
+  
+  player.pause();
+  videoScreen.pause();
+  videoScreen.style.display = "none";
+  videoScreen.src = "";
+
+  // বাটনের সাদা কালার রিমুভ করা
+  const allBtns = document.querySelectorAll('.song-btn');
+  allBtns.forEach(btn => btn.classList.remove('active'));
+}
+
+// Music Player Function
 function playSong(title, audioSrc, videoSrc, btnElement){
   const player = document.getElementById("audio-player");
   const titleDisplay = document.getElementById("current-song-title");
   const videoScreen = document.getElementById("video-screen");
 
-  // ১. প্লেয়ারে গান লোড ও প্লে
+  // ১. গান প্লে করা
   player.src = audioSrc;
   player.play();
   titleDisplay.innerHTML = "▶ Playing: " + title;
@@ -380,16 +389,35 @@ function playSong(title, audioSrc, videoSrc, btnElement){
   allBtns.forEach(btn => btn.classList.remove('active'));
   btnElement.classList.add('active');
 
-  // ৩. ভিডিও লোড এবং হ্যান্ডেল করা
+  // ৩. ভিডিও লোড ও হ্যান্ডেল করা
   if(videoSrc && videoSrc.trim() !== ""){
     videoScreen.src = videoSrc;
     videoScreen.style.display = "block";
+    videoScreen.currentTime = 0;
     videoScreen.play();
   } else {
     videoScreen.pause();
     videoScreen.style.display = "none";
+    videoScreen.src = "";
   }
 }
+
+// 🎵 গান শেষ হলে ভিডিও ও সাদা বাটন বন্ধ হওয়ার লজিক 🎵
+document.getElementById("audio-player").addEventListener("ended", function() {
+  const videoScreen = document.getElementById("video-screen");
+  const titleDisplay = document.getElementById("current-song-title");
+
+  // ভিডিও হাইড ও অফ করা
+  videoScreen.pause();
+  videoScreen.style.display = "none";
+  videoScreen.src = "";
+
+  // বাটনের সাদা কালার সরিয়ে আগের সবুজ করা
+  const allBtns = document.querySelectorAll('.song-btn');
+  allBtns.forEach(btn => btn.classList.remove('active'));
+
+  titleDisplay.innerHTML = "Select a song to play...";
+});
 
 // ================= MATRIX GREEN ANIMATION =================
 function startMatrixAnimation(){
