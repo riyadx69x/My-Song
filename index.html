@@ -125,6 +125,7 @@ input::placeholder{
   padding: 25px;
 }
 
+/* Header Styles */
 .dash-header {
   display: flex;
   justify-content: space-between;
@@ -134,26 +135,71 @@ input::placeholder{
   margin-bottom: 25px;
 }
 
-.dash-header h1 {
-  font-size: 20px;
-  text-shadow: 0 0 10px #00ff00;
+/* Profile Image Style & Glitch */
+.profile-pic {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #00ff00;
+  object-fit: cover;
+  box-shadow: 0 0 10px #00ff00;
+  transition: 0.2s;
 }
 
-.btn-back {
-  background: transparent;
-  border: 1px solid #00ff00;
+.profile-pic.glitching {
+  animation: hackerGlitch 0.2s infinite alternate;
+}
+
+@keyframes hackerGlitch {
+  0% { transform: translate(0); box-shadow: 0 0 12px #00ff00; }
+  25% { transform: translate(-3px, 2px); box-shadow: -2px 0 15px #ff0000; }
+  50% { transform: translate(3px, -2px); box-shadow: 2px 0 15px #00ffff; }
+  75% { transform: translate(-2px, -1px); filter: hue-rotate(90deg); }
+  100% { transform: translate(2px, 2px); box-shadow: 0 0 12px #00ff00; }
+}
+
+/* Green Matrix Bold Welcome Text Style with Glitch */
+.welcome-text {
+  font-size: 24px;
+  font-weight: 900;
   color: #00ff00;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  box-shadow: 0 0 8px #00ff00;
-  transition: 0.3s;
+  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00aa00;
+  letter-spacing: 3px;
+  animation: greenGlitchText 0.3s infinite alternate;
 }
 
-.btn-back:hover {
-  background: #00ff00;
-  color: #000;
+@keyframes greenGlitchText {
+  0% { transform: translate(0, 0); text-shadow: 0 0 10px #00ff00; }
+  20% { transform: translate(-2px, 1px); text-shadow: 2px -2px 10px #ffffff, -2px 2px 10px #00ff00; }
+  40% { transform: translate(2px, -1px); text-shadow: -2px 2px 10px #00ff00; }
+  60% { transform: translate(-1px, -2px); text-shadow: 1px 1px 12px #33ff33; }
+  80% { transform: translate(1px, 2px); text-shadow: -1px -1px 10px #ffffff; }
+  100% { transform: translate(0, 0); text-shadow: 0 0 12px #00ff00; }
+}
+
+/* Original Facebook Logo Link Style */
+.fb-icon-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+  background: #1877f2;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #1877f2;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.fb-icon-link svg {
+  width: 24px;
+  height: 24px;
+  fill: #ffffff;
+}
+
+.fb-icon-link:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 18px #1877f2;
 }
 
 .section-title {
@@ -246,12 +292,23 @@ audio {
 <div id="dashboard-page">
   <div class="dashboard-container">
     
+    <!-- Updated Header Section -->
     <div class="dash-header">
-      <h1>SYSTEM ACCESS GRANTED</h1>
-      <button class="btn-back" onclick="logout()">⬅ Back</button>
+      <!-- Left: Profile Image -->
+      <img id="hacker-img" class="profile-pic" src="https://i.postimg.cc/MKj6j2kL/95b6ff45cd35fc43eec9abba4b0e9b20.jpg" alt="Profile">
+      
+      <!-- Center: Bold Green Matrix Welcome Text -->
+      <div class="welcome-text">WELCOME</div>
+      
+      <!-- Right: Original Facebook Logo Icon Link -->
+      <a href="https://www.facebook.com/riadx52" target="_blank" class="fb-icon-link" title="Facebook">
+        <svg viewBox="0 0 24 24">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </a>
     </div>
 
-    <!-- Music Video Screen (Loop সরানো হয়েছে) -->
+    <!-- Music Video Screen -->
     <video id="video-screen" class="video-box" autoplay muted playsinline></video>
 
     <!-- Music Folder & Player Only -->
@@ -348,36 +405,12 @@ document.getElementById("pass").addEventListener("keypress", function(e){
   }
 });
 
-// Logout / Back Function
-function logout(){
-  document.getElementById("dashboard-page").style.display = "none";
-  document.getElementById("login-page").style.display = "flex";
-  document.getElementById("pass").value = "";
-  document.getElementById("msg").innerHTML = "";
-  
-  stopAudioAndVideo();
-}
-
-// অডিও এবং ভিডিও বন্ধ করার ফাংশন
-function stopAudioAndVideo() {
-  const player = document.getElementById("audio-player");
-  const videoScreen = document.getElementById("video-screen");
-  
-  player.pause();
-  videoScreen.pause();
-  videoScreen.style.display = "none";
-  videoScreen.src = "";
-
-  // বাটনের সাদা কালার রিমুভ করা
-  const allBtns = document.querySelectorAll('.song-btn');
-  allBtns.forEach(btn => btn.classList.remove('active'));
-}
-
 // Music Player Function
 function playSong(title, audioSrc, videoSrc, btnElement){
   const player = document.getElementById("audio-player");
   const titleDisplay = document.getElementById("current-song-title");
   const videoScreen = document.getElementById("video-screen");
+  const hackerImg = document.getElementById("hacker-img");
 
   // ১. গান প্লে করা
   player.src = audioSrc;
@@ -389,7 +422,10 @@ function playSong(title, audioSrc, videoSrc, btnElement){
   allBtns.forEach(btn => btn.classList.remove('active'));
   btnElement.classList.add('active');
 
-  // ৩. ভিডিও লোড ও হ্যান্ডেল করা
+  // ৩. ছবিতে Glitch Effect শুরু করা
+  hackerImg.classList.add('glitching');
+
+  // ৪. ভিডিও লোড ও হ্যান্ডেল করা
   if(videoSrc && videoSrc.trim() !== ""){
     videoScreen.src = videoSrc;
     videoScreen.style.display = "block";
@@ -402,22 +438,37 @@ function playSong(title, audioSrc, videoSrc, btnElement){
   }
 }
 
-// 🎵 গান শেষ হলে ভিডিও ও সাদা বাটন বন্ধ হওয়ার লজিক 🎵
+// 🎵 গান শেষ হলে সব রিমুভ করার লজিক 🎵
 document.getElementById("audio-player").addEventListener("ended", function() {
+  stopEffects();
+});
+
+document.getElementById("audio-player").addEventListener("pause", function() {
+  if (this.ended || this.paused) {
+    document.getElementById("hacker-img").classList.remove('glitching');
+  }
+});
+
+document.getElementById("audio-player").addEventListener("play", function() {
+  document.getElementById("hacker-img").classList.add('glitching');
+});
+
+function stopEffects(){
   const videoScreen = document.getElementById("video-screen");
   const titleDisplay = document.getElementById("current-song-title");
+  const hackerImg = document.getElementById("hacker-img");
 
-  // ভিডিও হাইড ও অফ করা
+  hackerImg.classList.remove('glitching');
+
   videoScreen.pause();
   videoScreen.style.display = "none";
   videoScreen.src = "";
 
-  // বাটনের সাদা কালার সরিয়ে আগের সবুজ করা
   const allBtns = document.querySelectorAll('.song-btn');
   allBtns.forEach(btn => btn.classList.remove('active'));
 
   titleDisplay.innerHTML = "Select a song to play...";
-});
+}
 
 // ================= MATRIX GREEN ANIMATION =================
 function startMatrixAnimation(){
