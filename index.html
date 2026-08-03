@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Hacker Site</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Courier New', Courier, monospace, Arial, sans-serif;
+}
+
+body{
+  height:100vh;
+  background:#000;
+  overflow-x:hidden;
+  color: #00ff00;
+}
+
+/* ================= LOGIN PAGE STYLES ================= */
+#login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background: #000;
+}
+
+.box{
+  width:340px;
+  background:#0d0d0d;
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+  border:2px solid #ff0000;
+  box-shadow:0 0 25px rgba(255,0,0,.7);
+}
+
+h2{
+  color:#ff0000;
+  margin-bottom:20px;
+  font-size:24px;
+  font-family: Arial, sans-serif;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border:2px solid #ff0000;
+  outline:none;
+  border-radius:8px;
+  margin-bottom:15px;
+  font-size:16px;
+  background:#111;
+  color:white;
+}
+
+input::placeholder{
+  color:#888;
+}
+
+.btn-red{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#ff0000;
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.btn-red:hover{
+  background:#cc0000;
+}
+
+#msg{
+  margin-top:15px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.footer{
+  margin-top:20px;
+  color:#666;
+  font-size:13px;
+}
+
+/* ================= MAIN DASHBOARD STYLES ================= */
+#dashboard-page {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+}
+
+/* Matrix Canvas Background */
+#matrix-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.dashboard-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: rgba(0, 10, 0, 0.85);
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 20px #00ff00;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dashed #00ff00;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.dash-header h1 {
+  font-size: 20px;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+.btn-back {
+  background: transparent;
+  border: 1px solid #00ff00;
+  color: #00ff00;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 0 8px #00ff00;
+  transition: 0.3s;
+}
+
+.btn-back:hover {
+  background: #00ff00;
+  color: #000;
+}
+
+.section-title {
+  font-size: 18px;
+  margin: 10px 0 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+.player-card {
+  background: rgba(0, 20, 0, 0.9);
+  border: 1px solid #00ff00;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+/* Video Box Style */
+.video-box {
+  width: 100%;
+  max-height: 250px;
+  border-radius: 8px;
+  border: 1px solid #00ff00;
+  margin-bottom: 15px;
+  background: #000;
+  display: none; /* ডিফল্টভাবে হাইড থাকবে */
+}
+
+.song-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #051505;
+  border: 1px solid #00aa00;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.song-btn {
+  background: #00ff00;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.song-btn:hover {
+  background: #00cc00;
+  box-shadow: 0 0 8px #00ff00;
+}
+
+/* অ্যাক্টিভ প্লে বাটন সাদা করার CSS */
+.song-btn.active {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 0 0 12px #ffffff !important;
+}
+
+audio {
+  width: 100%;
+  margin-top: 15px;
+  filter: invert(100%) hue-rotate(90deg);
+}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN PAGE ================= -->
+<div id="login-page">
+  <div class="box">
+    <h2>LOGIN PASSWORD</h2>
+    <input type="password" id="pass" placeholder="Enter Password">
+    <button class="btn-red" onclick="login()">UNLOCK</button>
+    <p id="msg"></p>
+    <div class="footer">
+      Protected Website
+    </div>
+  </div>
+</div>
+
+<!-- ================= DASHBOARD PAGE ================= -->
+<canvas id="matrix-canvas"></canvas>
+
+<div id="dashboard-page">
+  <div class="dashboard-container">
+    
+    <div class="dash-header">
+      <h1>SYSTEM ACCESS GRANTED</h1>
+      <button class="btn-back" onclick="logout()">⬅ Back</button>
+    </div>
+
+    <!-- Music Video Screen -->
+    <video id="video-screen" class="video-box" autoplay loop muted playsinline></video>
+
+    <!-- Music Folder & Player Only -->
+    <div class="section-title">🎵 Music Folder</div>
+    <div class="player-card">
+      <p id="current-song-title" style="font-weight:bold; margin-bottom:10px; color:#00ff00;">Select a song to play...</p>
+      
+      <!-- Audio Player -->
+      <audio id="audio-player" controls>
+        Your browser does not support the audio element.
+      </audio>
+
+      <!-- Track List -->
+      <div class="song-item">
+        <span>🎶 FAASLE</span>
+        <button class="song-btn" onclick="playSong('FAASLE', 'Aditya_Rikhari_-_FAASLE(256k).mp3', '', this)">▶ Play</button>
+      </div>
+
+      <div class="song-item">
+        <span>🎶 Main Agar</span>
+        <button class="song-btn" onclick="playSong('Main Agar', 'Pritam___Atif_Aslam_-_Main_Agar__Lyrics_(256k).mp3', '', this)">▶ Play</button>
+      </div>
+  
+      <div class="song-item">
+        <span>🎶 Teri Nazro</span>
+        <button class="song-btn" onclick="playSong('Teri Nazro', 'ssstik.io_@sanbir_mondul__1785748798585.mp4', 'ssstik.io_@sanbir_mondul__1785748798585.mp4', this)">▶ Play</button>
+     </div>
+  
+     <div class="song-item">
+        <span>🎶 Tomake</span>
+        <button class="song-btn" onclick="playSong('Tomake', 'Tomake__তোমাকে____Fidaa___Full_Video_Song___Yash___Sanjana___Arindom___Nikhita___Pathikrit___SVF(256k).mp3', '', this)">▶ Play</button>
+     </div>
+
+     <div class="song-item">
+        <span>🎶 Love Story</span>
+        <button class="song-btn" onclick="playSong('Love Story', 'LOVE_STORY-_Genshin_Impact_[AMV_GMV](128k).mp3', '', this)">▶ Play</button>
+     </div>
+  
+     <div class="song-item">
+        <span>🎶 𝑮𝒐𝒍𝒅𝒆𝒏_𝑩𝒓𝒐𝒘𝒏</span>
+        <button class="song-btn" onclick="playSong('𝑮𝒐𝒍𝒅𝒆𝒏_𝑩𝒓𝒐𝒘𝒏', '𝑮𝒐𝒍𝒅𝒆𝒏_𝑩𝒓𝒐𝒘𝒏_-_𝑻𝒉𝒆_𝑺𝒕𝒓𝒂𝒏𝒈𝒍𝒆𝒓𝒔___𝑩𝒆𝒔𝒕_𝒑𝒂𝒓𝒕_𝒍𝒐𝒐𝒑𝒆𝒅(256k).mp3', '', this)">▶ Play</button>
+      </div> 
+  
+      <div class="song-item">
+        <span>🎶 Suzume</span>
+        <button class="song-btn" onclick="playSong('Suzume', 'Suzume___A_Suzume_no_Tojimari_AMV(256k).mp3', '', this)">▶ Play</button>
+     </div> 
+
+     <div class="song-item">
+        <span>🎶 Ishq_DeFan.</span>
+        <button class="song-btn" onclick="playSong('Ishq_DeFa.', 'Ishq_De_Fanniyar_-_Female___Fukrey_Returns___Pulkit_Samrat___Priya_Anand___Jyotica_Tangri___Lyrical(256k).mp3', '', this)">▶ Play</button>
+      </div> 
+
+     <div class="song-item">
+        <span>🎶 Tera_Mera</span>
+        <button class="song-btn" onclick="playSong('Tera_Mera', 'Tera_Mera_Rishta_Purana_-_Mushtafa_Zahid__slowed_reverb__360P__%23youtube(256k).mp3', '', this)">▶ Play</button>
+      </div> 
+
+     <div class="song-item">
+        <span>🎶 Banjara</span>
+        <button class="song-btn" onclick="playSong('Banjara', 'Banjara__Slowed___Reverb____Emotional_Hindi_Song___Lofi_Relaxing_Version_🎧(256k).mp3', '', this)">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PASSWORD = "Free";
+
+// Login Function
+function login(){
+  let pass = document.getElementById("pass").value;
+
+  if(pass === PASSWORD){
+    document.getElementById("msg").style.color = "#00ff00";
+    document.getElementById("msg").innerHTML = "Password correct";
+
+    setTimeout(function(){
+      document.getElementById("login-page").style.display = "none";
+      document.getElementById("dashboard-page").style.display = "block";
+      startMatrixAnimation();
+    }, 800);
+
+  } else {
+    document.getElementById("msg").style.color = "#ff0000";
+    document.getElementById("msg").innerHTML = "❌ Incorrect Password";
+  }
+}
+
+// Enter Key Support
+document.getElementById("pass").addEventListener("keypress", function(e){
+  if(e.key === "Enter"){
+    login();
+  }
+});
+
+// Logout / Back Function
+function logout(){
+  document.getElementById("dashboard-page").style.display = "none";
+  document.getElementById("login-page").style.display = "flex";
+  document.getElementById("pass").value = "";
+  document.getElementById("msg").innerHTML = "";
+  
+  // Pause Audio & Video
+  const player = document.getElementById("audio-player");
+  player.pause();
+  
+  const videoScreen = document.getElementById("video-screen");
+  videoScreen.pause();
+  videoScreen.style.display = "none";
+}
+
+// Music Player Function (With Video & White Button Toggle)
+function playSong(title, audioSrc, videoSrc, btnElement){
+  const player = document.getElementById("audio-player");
+  const titleDisplay = document.getElementById("current-song-title");
+  const videoScreen = document.getElementById("video-screen");
+
+  // ১. প্লেয়ারে গান লোড ও প্লে
+  player.src = audioSrc;
+  player.play();
+  titleDisplay.innerHTML = "▶ Playing: " + title;
+
+  // ২. বাটনের কালার সাদা করা (Active state)
+  const allBtns = document.querySelectorAll('.song-btn');
+  allBtns.forEach(btn => btn.classList.remove('active'));
+  btnElement.classList.add('active');
+
+  // ৩. ভিডিও লোড এবং হ্যান্ডেল করা
+  if(videoSrc && videoSrc.trim() !== ""){
+    videoScreen.src = videoSrc;
+    videoScreen.style.display = "block";
+    videoScreen.play();
+  } else {
+    videoScreen.pause();
+    videoScreen.style.display = "none";
+  }
+}
+
+// ================= MATRIX GREEN ANIMATION =================
+function startMatrixAnimation(){
+  const canvas = document.getElementById('matrix-canvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = [];
+
+  for (let i = 0; i < columns; i++) {
+    drops[i] = 1;
+  }
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#00ff00';
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = characters.charAt(Math.floor(Math.random() * characters.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 33);
+}
+
+// Handle window resize for canvas
+window.addEventListener('resize', () => {
+  const canvas = document.getElementById('matrix-canvas');
+  if(canvas) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+});
+</script>
+
+</body>
+</html>
