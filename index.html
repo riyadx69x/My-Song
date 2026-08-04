@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Hacker Site</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Courier New', Courier, monospace, Arial, sans-serif;
+}
+
+body{
+  height:100vh;
+  background:#000;
+  overflow-x:hidden;
+  color: #00ff00;
+}
+
+/* ================= LOGIN PAGE STYLES ================= */
+#login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background: #000;
+}
+
+.box{
+  width:340px;
+  background:#0d0d0d;
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+  border:2px solid #ff0000;
+  box-shadow:0 0 25px rgba(255,0,0,.7);
+}
+
+h2{
+  color:#ff0000;
+  margin-bottom:20px;
+  font-size:24px;
+  font-family: Arial, sans-serif;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border:2px solid #ff0000;
+  outline:none;
+  border-radius:8px;
+  margin-bottom:15px;
+  font-size:16px;
+  background:#111;
+  color:white;
+}
+
+input::placeholder{
+  color:#888;
+}
+
+.btn-red{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#ff0000;
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.btn-red:hover{
+  background:#cc0000;
+}
+
+#msg{
+  margin-top:15px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.footer{
+  margin-top:20px;
+  color:#666;
+  font-size:13px;
+}
+
+/* ================= MAIN DASHBOARD STYLES ================= */
+#dashboard-page {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+}
+
+/* Matrix Canvas Background */
+#matrix-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.dashboard-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: rgba(0, 10, 0, 0.85);
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 20px #00ff00;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+/* Header Styles */
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dashed #00ff00;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+/* Profile Image Style & Glitch */
+.profile-pic {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #00ff00;
+  object-fit: cover;
+  box-shadow: 0 0 10px #00ff00;
+  transition: 0.2s;
+}
+
+.profile-pic.glitching {
+  animation: hackerGlitch 0.2s infinite alternate;
+}
+
+@keyframes hackerGlitch {
+  0% { transform: translate(0); box-shadow: 0 0 12px #00ff00; }
+  25% { transform: translate(-3px, 2px); box-shadow: -2px 0 15px #ff0000; }
+  50% { transform: translate(3px, -2px); box-shadow: 2px 0 15px #00ffff; }
+  75% { transform: translate(-2px, -1px); filter: hue-rotate(90deg); }
+  100% { transform: translate(2px, 2px); box-shadow: 0 0 12px #00ff00; }
+}
+
+/* Green Matrix Bold Welcome Text Style with Glitch */
+.welcome-text {
+  font-size: 24px;
+  font-weight: 900;
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00aa00;
+  letter-spacing: 3px;
+  animation: greenGlitchText 0.3s infinite alternate;
+}
+
+@keyframes greenGlitchText {
+  0% { transform: translate(0, 0); text-shadow: 0 0 10px #00ff00; }
+  20% { transform: translate(-2px, 1px); text-shadow: 2px -2px 10px #ffffff, -2px 2px 10px #00ff00; }
+  40% { transform: translate(2px, -1px); text-shadow: -2px 2px 10px #00ff00; }
+  60% { transform: translate(-1px, -2px); text-shadow: 1px 1px 12px #33ff33; }
+  80% { transform: translate(1px, 2px); text-shadow: -1px -1px 10px #ffffff; }
+  100% { transform: translate(0, 0); text-shadow: 0 0 12px #00ff00; }
+}
+
+/* Original Facebook Logo Link Style */
+.fb-icon-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+  background: #1877f2;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #1877f2;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.fb-icon-link svg {
+  width: 24px;
+  height: 24px;
+  fill: #ffffff;
+}
+
+.fb-icon-link:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 18px #1877f2;
+}
+
+.section-title {
+  font-size: 18px;
+  margin: 10px 0 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+.player-card {
+  background: rgba(0, 20, 0, 0.9);
+  border: 1px solid #00ff00;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+/* Video Box Style */
+.video-box {
+  width: 100%;
+  max-height: 250px;
+  border-radius: 8px;
+  border: 1px solid #00ff00;
+  margin-bottom: 15px;
+  background: #000;
+  display: none;
+}
+
+.song-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #051505;
+  border: 1px solid #00aa00;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.song-btn {
+  background: #00ff00;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.song-btn:hover {
+  background: #00cc00;
+  box-shadow: 0 0 8px #00ff00;
+}
+
+/* অ্যাক্টিভ প্লে বাটন সাদা করার CSS */
+.song-btn.active {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 0 0 12px #ffffff !important;
+}
+
+audio {
+  width: 100%;
+  margin-top: 15px;
+  filter: invert(100%) hue-rotate(90deg);
+}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN PAGE ================= -->
+<div id="login-page">
+  <div class="box">
+    <h2>LOGIN PASSWORD</h2>
+    <input type="password" id="pass" placeholder="Enter Password">
+    <button class="btn-red" onclick="login()">UNLOCK</button>
+    <p id="msg"></p>
+    <div class="footer">
+      Protected Website
+    </div>
+  </div>
+</div>
+
+<!-- ================= DASHBOARD PAGE ================= -->
+<canvas id="matrix-canvas"></canvas>
+
+<div id="dashboard-page">
+  <div class="dashboard-container">
+    
+    <!-- Updated Header Section -->
+    <div class="dash-header">
+      <!-- Left: Profile Image -->
+      <img id="hacker-img" class="profile-pic" src="https://i.postimg.cc/MKj6j2kL/95b6ff45cd35fc43eec9abba4b0e9b20.jpg" alt="Profile">
+      
+      <!-- Center: Bold Green Matrix Welcome Text -->
+      <div class="welcome-text">WELCOME</div>
+      
+      <!-- Right: Original Facebook Logo Icon Link -->
+      <a href="https://www.facebook.com/riadx52" target="_blank" class="fb-icon-link" title="Facebook">
+        <svg viewBox="0 0 24 24">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Music Video Screen -->
+    <video id="video-screen" class="video-box" autoplay muted playsinline></video>
+
+    <!-- Music Folder & Player Only -->
+    <div class="section-title">🎵 Music Folder</div>
+    <div class="player-card">
+      <p id="current-song-title" style="font-weight:bold; margin-bottom:10px; color:#00ff00;">Select a song to play...</p>
+      
+      <!-- Audio Player -->
+      <audio id="audio-player" controls>
+        Your browser does not support the audio element.
+      </audio>
+
+      <!-- Track List -->
+      <div class="song-item">
+        <span>🎶 FAASLE</span>
+        <button class="song-btn" onclick="playSong('FAASLE', 'Aditya_Rikhari_-_FAASLE(256k).mp3', '', this)">▶ Play</button>
+      </div>
+
+      <div class="song-item">
+        <span>🎶 Main Agar</span>
+        <button class="song-btn" onclick="playSong('Main Agar', 'Pritam___Atif_Aslam_-_Main_Agar__Lyrics_(256k).mp3', '', this)">▶ Play</button>
+      </div>
+  
+      <div class="song-item">
+        <span>🎶 Teri Nazro</span>
+        <button class="song-btn" onclick="playSong('Teri Nazro', 'ssstik.io_@sanbir_mondul__1785748798585.mp4', 'ssstik.io_@sanbir_mondul__1785748798585.mp4', this)">▶ Play</button>
+     </div>
+  
+     <div class="song-item">
+        <span>🎶 Tomake</span>
+        <button class="song-btn" onclick="playSong('Tomake', 'Tomake__তোমাকে____Fidaa___Full_Video_Song___Yash___Sanjana___Arindom___Nikhita___Pathikrit___SVF(256k).mp3', '', this)">▶ Play</button>
+     </div>
+
+     <div class="song-item">
+        <span>🎶 Love Story</span>
+        <button class="song-btn" onclick="playSong('Love Story', 'LOVE_STORY-_Genshin_Impact_[AMV_GMV](128k).mp3', '', this)">▶ Play</button>
+     </div>
+  
+     <div class="song-item">
+        <span>🎶 𝑮𝒐𝒍𝒅𝒆𝒏_𝑩𝒓𝒐𝒘𝒏</span>
+        <button class="song-btn" onclick="playSong('𝑮𝒐𝒍𝒅𝒆𝒏_𝑩𝒓𝒐𝒘𝒏', '𝑮𝒐𝒍𝒅𝒆𝒏_𝑩𝒓𝒐𝒘𝒏_-_𝑻𝒉𝒆_𝑺𝒕𝒓𝒂𝒏𝒈𝒍𝒆𝒓𝒔___𝑩𝒆𝒔𝒕_𝒑𝒂𝒓𝒕_𝒍𝒐𝒐𝒑𝒆𝒅(256k).mp3', '', this)">▶ Play</button>
+      </div> 
+  
+      <div class="song-item">
+        <span>🎶 Suzume</span>
+        <button class="song-btn" onclick="playSong('Suzume', 'Suzume___A_Suzume_no_Tojimari_AMV(256k).mp3', '', this)">▶ Play</button>
+     </div> 
+
+     <div class="song-item">
+        <span>🎶 Ishq_DeFan.</span>
+        <button class="song-btn" onclick="playSong('Ishq_DeFa.', 'Ishq_De_Fanniyar_-_Female___Fukrey_Returns___Pulkit_Samrat___Priya_Anand___Jyotica_Tangri___Lyrical(256k).mp3', '', this)">▶ Play</button>
+      </div> 
+
+     <div class="song-item">
+        <span>🎶 Tera_Mera</span>
+        <button class="song-btn" onclick="playSong('Tera_Mera', 'Tera_Mera_Rishta_Purana_-_Mushtafa_Zahid__slowed_reverb__360P__%23youtube(256k).mp3', '', this)">▶ Play</button>
+      </div> 
+
+     <div class="song-item">
+        <span>🎶 Banjara</span>
+        <button class="song-btn" onclick="playSong('Banjara', 'Banjara__Slowed___Reverb____Emotional_Hindi_Song___Lofi_Relaxing_Version_🎧(256k).mp3', '', this)">▶ Play</button>
+      </div>
+
+     <div class="song-item">
+        <span>🎶 TikTok Song</span>
+        <button class="song-btn" onclick="playSong('TikTok Song', 'ssstik.io_@rifux_roa_1785828330273.mp4', 'ssstik.io_@rifux_roa_1785828330273.mp4', this)">▶ Play</button>
+      </div>
+
+     <div class="song-item">
+        <span>🎶 TikTok Song</span>
+        <button class="song-btn" onclick="playSong('TikTok Song', 'ssstik.io_@sasuke_uchyy2_17858450803.mp4', 'ssstik.io_@sasuke_uchyy2_17858450803.mp4', this)">▶ Play</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PASSWORD = "Free";
+
+// Login Function
+function login(){
+  let pass = document.getElementById("pass").value;
+
+  if(pass === PASSWORD){
+    document.getElementById("msg").style.color = "#00ff00";
+    document.getElementById("msg").innerHTML = "Password correct";
+
+    setTimeout(function(){
+      document.getElementById("login-page").style.display = "none";
+      document.getElementById("dashboard-page").style.display = "block";
+      startMatrixAnimation();
+    }, 800);
+
+  } else {
+    document.getElementById("msg").style.color = "#ff0000";
+    document.getElementById("msg").innerHTML = "❌ Incorrect Password";
+  }
+}
+
+// Enter Key Support
+document.getElementById("pass").addEventListener("keypress", function(e){
+  if(e.key === "Enter"){
+    login();
+  }
+});
+
+// Music Player Function
+function playSong(title, audioSrc, videoSrc, btnElement){
+  const player = document.getElementById("audio-player");
+  const titleDisplay = document.getElementById("current-song-title");
+  const videoScreen = document.getElementById("video-screen");
+  const hackerImg = document.getElementById("hacker-img");
+
+  // ১. গান প্লে করা
+  player.src = audioSrc;
+  player.play();
+  titleDisplay.innerHTML = "▶ Playing: " + title;
+
+  // ২. বাটনের কালার সাদা করা (Active state)
+  const allBtns = document.querySelectorAll('.song-btn');
+  allBtns.forEach(btn => btn.classList.remove('active'));
+  btnElement.classList.add('active');
+
+  // ৩. ছবিতে Glitch Effect শুরু করা
+  hackerImg.classList.add('glitching');
+
+  // ৪. ভিডিও লোড ও হ্যান্ডেল করা
+  if(videoSrc && videoSrc.trim() !== ""){
+    videoScreen.src = videoSrc;
+    videoScreen.style.display = "block";
+    videoScreen.currentTime = 0;
+    videoScreen.play();
+  } else {
+    videoScreen.pause();
+    videoScreen.style.display = "none";
+    videoScreen.src = "";
+  }
+}
+
+// 🎵 গান শেষ হলে সব রিমুভ করার লজিক 🎵
+document.getElementById("audio-player").addEventListener("ended", function() {
+  stopEffects();
+});
+
+document.getElementById("audio-player").addEventListener("pause", function() {
+  if (this.ended || this.paused) {
+    document.getElementById("hacker-img").classList.remove('glitching');
+  }
+});
+
+document.getElementById("audio-player").addEventListener("play", function() {
+  document.getElementById("hacker-img").classList.add('glitching');
+});
+
+function stopEffects(){
+  const videoScreen = document.getElementById("video-screen");
+  const titleDisplay = document.getElementById("current-song-title");
+  const hackerImg = document.getElementById("hacker-img");
+
+  hackerImg.classList.remove('glitching');
+
+  videoScreen.pause();
+  videoScreen.style.display = "none";
+  videoScreen.src = "";
+
+  const allBtns = document.querySelectorAll('.song-btn');
+  allBtns.forEach(btn => btn.classList.remove('active'));
+
+  titleDisplay.innerHTML = "Select a song to play...";
+}
+
+// ================= MATRIX GREEN ANIMATION =================
+function startMatrixAnimation(){
+  const canvas = document.getElementById('matrix-canvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = [];
+
+  for (let i = 0; i < columns; i++) {
+    drops[i] = 1;
+  }
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#00ff00';
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = characters.charAt(Math.floor(Math.random() * characters.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 33);
+}
+
+// Handle window resize for canvas
+window.addEventListener('resize', () => {
+  const canvas = document.getElementById('matrix-canvas');
+  if(canvas) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+});
+</script>
+
+</body>
+</html>
